@@ -1,90 +1,32 @@
-/* General Styling */
-body {
-  font-family: 'Arial', sans-serif;
-  background-color: #f0f0f0;
-  margin: 0;
-  padding: 0;
-}
-
-/* Container for the entire app */
 .container {
-  max-width: 800px;
-  margin: 50px auto;
-  padding: 20px;
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Heading */
-.heading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
   text-align: center;
-  color: #333;
-  font-size: 2rem;
-  margin-bottom: 20px;
-}
-
-/* Content Styling */
-.content-container {
+  background-color: #f4f4f4;
   padding: 20px;
-  border-radius: 10px;
-  background-color: #fafafa;
-  margin-top: 20px;
 }
 
-/* Default Content (India) */
-.content.india {
-  background-color: #fffcf7;
-  color: #333;
+.blog {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
 }
 
-.content.india h2 {
-  color: #d9534f;
+.error {
+  color: red;
+  font-weight: bold;
 }
 
-/* Content for USA */
-.content.usa {
-  background-color: #e6f7ff;
-  color: #333;
-}
-
-.content.usa h2 {
-  color: #007bff;
-}
-
-/* Global News content */
-.content.global {
-  background-color: #f0f8ff;
-  color: #333;
-}
-
-.content.global h2 {
-  color: #28a745;
-}
-
-/* Error and Loading Messages */
-.error, .loading {
-  text-align: center;
-  font-size: 1.2rem;
-  color: #e74c3c;
-}
-
-/* Responsive Design */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .container {
-    padding: 15px;
-    margin: 20px;
+    padding: 10px;
   }
 
-  .heading {
-    font-size: 1.5rem;
-  }
-
-  .content-container {
-    padding: 15px;
-  }
-
-  .content h2 {
-    font-size: 1.2rem;
+  .blog {
+    max-width: 90%;
   }
 }

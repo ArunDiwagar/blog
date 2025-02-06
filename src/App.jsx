@@ -1,102 +1,60 @@
-import React, { useState, useEffect } from 'react';
-import './App.css'; // Importing the CSS file
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import "./App.css";
 
-const countriesBoundaries = [
-  {
-    country: "India",
-    countryCode: "IN",
-    latRange: {
-      min: 8.7550,  // Southernmost point (Sri Lanka border)
-      max: 37.0858, // Northernmost point (Jammu & Kashmir)
-    },
-    longRange: {
-      min: 68.1766, // Westernmost point (Gujarat)
-      max: 97.6167, // Easternmost point (Manipur)
-    },
+const API_KEY = "e9042f29099cb8"; 
+
+const blogContent = {
+  India: {
+    title: "Latest Trends in Indian Technology",
+    content: "India's tech industry is rapidly growing with advancements in AI, Blockchain, and 5G."
   },
-  {
-    country: "United States of America",
-    countryCode: "US",
-    latRange: {
-      min: 24.3963,  // Southernmost point (Florida)
-      max: 49.3843,  // Northernmost point (Maine)
-    },
-    longRange: {
-      min: -125.0000, // Westernmost point (California)
-      max: -66.9346,  // Easternmost point (Maine)
-    }
+  "North America": {
+    title: "Tech Innovations in North America",
+    content: "North America leads in AI, Cloud Computing, and Quantum Computing."
   }
-  
-];
+};
 
-
-const BlogContent = () => {
+function App() {
   const [location, setLocation] = useState(null);
-  const [country, setCountry] = useState("India"); // Default country
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [permissionGranted, setPermissionGranted] = useState(false);
-
-  const checkCountry = (latitude, longitude) => {
-    for (let boundary of countriesBoundaries) {
-      console.log("Checking country for:", latitude, longitude);  // Debugging line
-      if (
-        latitude >= boundary.latRange.min &&
-        latitude <= boundary.latRange.max &&
-        longitude >= boundary.longRange.min &&
-        longitude <= boundary.longRange.max
-      ) {
-        console.log("Detected Country:", boundary.country);  // Debugging line
-        return boundary.country;
-      }
-    }
-    return "Unknown";
-  };
 
   useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          console.log("Latitude:", latitude, "Longitude:", longitude);
-
-          setLocation({ latitude, longitude });
-          const detectedCountry = checkCountry(latitude, longitude);
-          setCountry(detectedCountry !== "Unknown" ? detectedCountry : "India");
-          setLoading(false);
-          setPermissionGranted(true);
-        },
-        (error) => {
-          console.log(error.message);
-          setError("Geolocation permission denied. Defaulting to India.");
-          setLoading(false);
-        }
-      );
-    } else {
-      setError("Geolocation not supported. Defaulting to India.");
-      setLoading(false);
-    }
+    getLocation();
   }, []);
 
-  if (loading) return <p className="loading">Loading your location...</p>;
-  if (error) return <p className="error">{error}</p>;
+  const getLocation = () => {
+    axios.get(`https://ipinfo.io/json?token=${API_KEY}`)
+      .then(response => {
+        console.log("API Response:", response.data); 
+        const country = response.data.country; 
+        if (country) {
+          setLocation(country === "IN" ? "India" : "North America");
+        } else {
+          setLocation("India"); 
+          setError("Could not detect country. Using default content.");
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching location", error);
+        setError("Failed to fetch location. Using default content.");
+        setLocation("India");
+      });
+  };
 
   return (
     <div className="container">
-      <h1 className="heading">Blog</h1>
-      <div className={`content ${country.toLowerCase().replace(/\s+/g, '-')}`}>
-        <h2>Latest News from {country}</h2>
-        {country === "India" ? (
-          <p>India's tech industry is advancing in AI, blockchain, and 5G.</p>
-        ) : country === "Central North America" ? (
-          <p>North America leads in AI, cloud computing, and space exploration.</p>
-        ) : (
-          <p>Stay updated with global trends.</p>
-        )}
-        <p>Your current location: {country}</p>
-      </div>
+      {error && <p className="error">{error}</p>}
+      {location ? (
+        <div className="blog">
+          <h1>{blogContent[location].title}</h1>
+          <p>{blogContent[location].content}</p>
+        </div>
+      ) : (
+        <p>Loading content...</p>
+      )}
     </div>
   );
-};
+}
 
-export default BlogContent;
+export default App;
