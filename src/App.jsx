@@ -26,6 +26,7 @@ const countriesBoundaries = [
       max: -66.9346,  // Easternmost point (Maine)
     }
   }
+  
 ];
 
 
